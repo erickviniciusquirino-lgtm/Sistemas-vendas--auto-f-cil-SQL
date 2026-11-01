@@ -1,0 +1,77 @@
+-- ==========================================
+-- PROJETO: AUTO FACIL
+-- Sistema de gerenciamento de vendas de veiculos
+-- Autor: Erik Vinicius Nunes de Souza
+-- Curso: Analise e Desenvolvimento de Sistemas
+-- ==========================================
+
+CREATE TABLE clientes (
+    id_cliente INTEGER PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(100)
+);
+
+CREATE TABLE vendedores (
+    id_vendedor INTEGER PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE veiculos (
+    id_veiculo INTEGER PRIMARY KEY,
+    modelo VARCHAR(100) NOT NULL,
+    marca VARCHAR(50),
+    ano INTEGER,
+    preco DECIMAL(10,2)
+);
+
+CREATE TABLE vendas (
+    id_venda INTEGER PRIMARY KEY,
+    id_cliente INTEGER NOT NULL,
+    id_vendedor INTEGER NOT NULL,
+    id_veiculo INTEGER NOT NULL,
+    data_venda DATE,
+    valor DECIMAL(10,2),
+
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+    FOREIGN KEY (id_vendedor) REFERENCES vendedores(id_vendedor),
+    FOREIGN KEY (id_veiculo) REFERENCES veiculos(id_veiculo)
+);
+
+-- CADASTRO DE CLIENTES
+INSERT INTO clientes VALUES
+(1, 'Carlos Silva', '61999990000', 'carlos@email.com'),
+(2, 'Mariana Souza', '61988880000', 'mariana@email.com');
+
+-- CADASTRO DE VENDEDORES
+INSERT INTO vendedores VALUES
+(1, 'Joao Pereira'),
+(2, 'Ana Costa');
+
+-- CADASTRO DE VEICULOS
+INSERT INTO veiculos VALUES
+(1, 'Onix', 'Chevrolet', 2023, 65000.00),
+(2, 'Corolla', 'Toyota', 2024, 120000.00);
+
+-- REGISTRO DE VENDAS
+INSERT INTO vendas VALUES
+(1, 1, 1, 1, '2026-10-15', 65000.00),
+(2, 2, 2, 2, '2026-10-20', 120000.00);
+
+-- CONSULTA DE TODAS AS VENDAS
+SELECT * FROM vendas;
+
+-- CONSULTA COM RELACIONAMENTO ENTRE TABELAS
+SELECT
+    clientes.nome AS cliente,
+    vendedores.nome AS vendedor,
+    veiculos.modelo AS veiculo,
+    vendas.data_venda,
+    vendas.valor
+FROM vendas
+INNER JOIN clientes
+    ON vendas.id_cliente = clientes.id_cliente
+INNER JOIN vendedores
+    ON vendas.id_vendedor = vendedores.id_vendedor
+INNER JOIN veiculos
+    ON vendas.id_veiculo = veiculos.id_veiculo;
